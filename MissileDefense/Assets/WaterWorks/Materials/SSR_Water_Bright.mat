@@ -15,14 +15,17 @@ MonoBehaviour:
   version: 0
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SSR_Water_Bright
-  m_Shader: {fileID: -6465566751694194690, guid: 0ba09e3043034d64eba4c886a0dc5959, type: 3}
-  m_ShaderKeywords: _SURFACE_TYPE_TRANSPARENT
+  m_Shader: {fileID: -6465566751694194690, guid: 0ba09e3043034d64eba4c886a0dc5959,
+    type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _SURFACE_TYPE_TRANSPARENT
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -75,7 +78,7 @@ Material:
     - _Speed: 0.2
     - _SrcBlend: 5
     - _Surface: 1
-    - _Tiling: 0.2
+    - _Tiling: 0.05
     - _Transparency: 0.9
     - _UseFoam: 1
     - _Use_Foam: 1
