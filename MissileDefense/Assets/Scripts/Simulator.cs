@@ -11,6 +11,10 @@ public class Simulator : MonoBehaviour
     public GameObject interceptor;
     public List<GameObject> staticInterceptors = new();
 
+    private GameObject missile;
+    private TestMissile missileControl;
+    public GameObject missilePrefab;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
@@ -25,6 +29,9 @@ public class Simulator : MonoBehaviour
 
         GameObject staticMissileFired = staticMissiles[0];
         staticMissiles.Remove(staticMissileFired);
+        missile = Instantiate(missilePrefab, staticMissileFired.transform.position, staticMissileFired.transform.rotation);
+        missileControl = missile.GetComponent<TestMissile>();
+        missileControl.Launch();
         Destroy(staticMissileFired);
     }
 }

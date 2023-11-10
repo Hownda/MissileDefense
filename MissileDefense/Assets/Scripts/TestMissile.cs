@@ -7,14 +7,17 @@ public class TestMissile : MonoBehaviour
 {
     public bool useGravity = true;
 
-    public float thrustForce = 10f;
+    public float thrustForce = 300000f;
     public float gravityForce = 9.81f;
     public float dragCoefficient = 0.04f;
-    public float diameter = 0.2f;
+    public float area = 0.21f;
     public float airDensity = 1.3f;
+    public float accelerationTime = 10;
 
     private Vector3 resultingForce;
 
+    private bool launched = false;
+    private float launchTime;
     Transform missilePos;
     Rigidbody rb;
 
@@ -26,17 +29,29 @@ public class TestMissile : MonoBehaviour
 
     void FixedUpdate()
     {
-        ApplyThrust();
-        ApplyDrag();
+        if (launched) 
+        {
+            if (launchTime + accelerationTime > Time.time)
+            {
+                ApplyThrust();
+            }
+            else
+            {
+                resultingForce = Vector3.zero;
+            }
+            ApplyDrag();
+        }
         //ApplyFriction();
-        //ApplyGravity();
+        ApplyGravity();
         //Vector3 force = new(transform.forward.x * thrustForce, useGravity ? gravityForce : transform.forward.y * thrustForce, transform.forward.z * thrustForce);
-        //rb.AddForce(force * Time.deltaTime);       
+        //rb.AddForce(force * Time.deltaTime);
+        rb.AddForce(resultingForce);
     }
 
-    private void ApplyGravity()
+    public void Launch()
     {
-        throw new NotImplementedException();        
+        launched = true;
+        launchTime = Time.time;
     }
 
     private void ApplyFriction()
@@ -47,14 +62,20 @@ public class TestMissile : MonoBehaviour
     private void ApplyThrust()
     {
         resultingForce = transform.forward * thrustForce;
+        rb.AddForce(resultingForce);
     }
 
     private void ApplyDrag()
     {
-        float area = Mathf.Pow(diameter / 2, 2) * Mathf.PI;
         Vector3 airResistance = dragCoefficient * area * airDensity * rb.velocity.sqrMagnitude * -rb.velocity.normalized / 2;
+        Debug.Log(resultingForce + " " + airResistance);
         resultingForce += airResistance;
-        rb.AddForce(resultingForce);
+        
+    }
+    private void ApplyGravity()
+    {
+        Vector3 gravity = new Vector3(0, -gravityForce * rb.mass, 0);
+        resultingForce += gravity;
     }
 
 
