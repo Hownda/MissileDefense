@@ -39,10 +39,10 @@ public class TestMissile : MonoBehaviour
             {
                 resultingForce = Vector3.zero;
             }
+            ApplyGravity();
             ApplyDrag();
         }
         //ApplyFriction();
-        ApplyGravity();
         //Vector3 force = new(transform.forward.x * thrustForce, useGravity ? gravityForce : transform.forward.y * thrustForce, transform.forward.z * thrustForce);
         //rb.AddForce(force * Time.deltaTime);
         rb.AddForce(resultingForce);

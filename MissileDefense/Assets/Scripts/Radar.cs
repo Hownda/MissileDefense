@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Radar : MonoBehaviour
 {
-    public float radius = 2000f;
+    public float radius = 200f;
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, radius);
+    }
 
     private void FixedUpdate()
     {
