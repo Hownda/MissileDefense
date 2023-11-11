@@ -66,9 +66,12 @@ MonoBehaviour:
   thrustForce: 150000
   gravityForce: 9.81
   dragCoefficient: 0.7
-  area: 0.21
+  areaFront: 0.21
+  areaSide: 2.55
   airDensity: 1.3
   accelerationTime: 10
+  correctionDelay: 0.4
+  fuelMass: 250
 --- !u!1001 &1501756004858314571
 PrefabInstance:
   m_ObjectHideFlags: 0
