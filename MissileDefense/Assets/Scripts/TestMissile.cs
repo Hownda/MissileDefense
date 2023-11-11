@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TestMissile : MonoBehaviour
 {
-    public bool useGravity = true;
+    public int missileID;
 
     public float thrustForce = 300000f;
     public float gravityForce = 9.81f;
@@ -23,6 +23,7 @@ public class TestMissile : MonoBehaviour
 
     void Start()
     {
+        missileID = Mathf.RoundToInt(UnityEngine.Random.Range(0, 1000000));
         missilePos = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
     }
@@ -68,7 +69,7 @@ public class TestMissile : MonoBehaviour
     private void ApplyDrag()
     {
         Vector3 airResistance = dragCoefficient * area * airDensity * rb.velocity.sqrMagnitude * -rb.velocity.normalized / 2;
-        Debug.Log(resultingForce + " " + airResistance);
+        //Debug.Log(resultingForce + " " + airResistance);
         resultingForce += airResistance;
         
     }
