@@ -62,14 +62,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e279dc549a9d5884ebe3056f079ecd24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useGravity: 1
+  missileID: 0
   thrustForce: 150000
   gravityForce: 9.81
   dragCoefficient: 0.7
   areaFront: 0.21
   areaSide: 2.55
   airDensity: 1.3
-  accelerationTime: 10
+  accelerationTime: 5.5
   correctionDelay: 0.4
   fuelMass: 250
 --- !u!1001 &1501756004858314571
