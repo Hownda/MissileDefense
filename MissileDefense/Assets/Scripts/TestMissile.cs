@@ -13,7 +13,7 @@ public class TestMissile : MonoBehaviour
     public float areaFront = 0.21f;
     public float areaSide = 2.55f;
     public float airDensity = 1.3f;
-    public float accelerationTime = 10f;
+    public float accelerationTime = 20f;
     public float correctionDelay = 0.2f;
 
     private float startThrust = 0;
@@ -30,8 +30,11 @@ public class TestMissile : MonoBehaviour
     Transform missilePos;
     Rigidbody rb;
 
+    private GameObject target;
+
     void Start()
     {
+        target = GameObject.FindGameObjectWithTag("Target");
         missileID = Mathf.RoundToInt(UnityEngine.Random.Range(0, 1000000));
         missilePos = GetComponent<Transform>();
         Time.timeScale = 1f;
@@ -59,20 +62,26 @@ public class TestMissile : MonoBehaviour
             if (turnHorizontal)
             {
                 Debug.Log("Flip");
-                rb.AddForceAtPosition(100f * -transform.up * 2, transform.position + transform.forward * 3.125f);
+                rb.AddForceAtPosition(80f * -transform.up * 2, transform.position + transform.forward * 3.125f);
             }
             if (adjust)
             {
                 Debug.Log("Adjust");
-                rb.AddForceAtPosition(103f * transform.up * 5, transform.position + transform.forward * 3.125f);
+                rb.AddForceAtPosition(105f * transform.up * 5, transform.position + transform.forward * 3.125f);
             }
             if (guidance)
             {
                 rb.angularVelocity = Vector3.zero;
-                rb.MoveRotation(Quaternion.Lerp(rb.rotation, Quaternion.Euler(-5, rb.rotation.eulerAngles.y, rb.rotation.eulerAngles.z), 0.05f));
+
+                // Rotate towards target
+                Vector3 direction = target.transform.position - transform.position;
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                rb.MoveRotation(Quaternion.RotateTowards(rb.rotation, targetRotation, 20 * Time.fixedDeltaTime));
+                //rb.MoveRotation(Quaternion.Lerp(rb.rotation, Quaternion.Euler(-5, rb.rotation.eulerAngles.y, rb.rotation.eulerAngles.z), 0.05f));
             }
 
             ApplyGravity();
+            ApplyLift();
             ApplyDrag();
         }
         //ApplyFriction();
@@ -113,11 +122,6 @@ public class TestMissile : MonoBehaviour
         rb.mass -= fuelMass / accelerationTime * Time.fixedDeltaTime;
     }
 
-    private void ApplyFriction()
-    {
-        throw new NotImplementedException();
-    }
-
     private void ApplyDrag()
     {
         Vector3 airResistance = dragCoefficient * areaFront * airDensity * rb.velocity.sqrMagnitude * -rb.velocity.normalized / 2;
@@ -129,6 +133,12 @@ public class TestMissile : MonoBehaviour
     {
         Vector3 gravity = new Vector3(0, -gravityForce * rb.mass, 0);
         resultingForce += gravity;
+    }
+
+    private void ApplyLift()
+    {
+        Vector3 lift = dragCoefficient * areaFront * airDensity * rb.velocity.sqrMagnitude * transform.up / 2;
+        resultingForce += lift;
     }
 
 
