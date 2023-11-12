@@ -1,46 +1,62 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Interceptor : MonoBehaviour
+public class Interceptor : Turret
 {
     public GameObject interceptorPrefab;
 
     public List<GameObject> interceptionMissiles = new();
 
-    public Transform body;
-    public Transform guns;
-
     public bool TargetMode = false;
 
     public float smoothness = 0.1f;
 
-    public void OnTargetDetected(Vector3 targetPosition)
+    [Header("Laser")]
+    public LineRenderer laserLine;
+    public Transform laserOrigin;
+    public float laserDuration = 0.05f;
+
+    public override void OnTurretTrigger(GameObject target)
     {
-        Vector3 missileVector = targetPosition - transform.position;
-
-        float bodyOffset = -Vector2.SignedAngle(new(body.forward.x, body.forward.z), new(missileVector.x, missileVector.z));
-        body.rotation *= Quaternion.Euler(0, bodyOffset, 0);
-
-        float distance = Vector3.Distance(transform.position, targetPosition);
-        float gunsAngle = (360 - guns.eulerAngles.x) % 360;
-        float missileAngle = Mathf.Asin((targetPosition.y - transform.position.y) / distance) * (180 / Mathf.PI);
-        float gunsOffset = (float)Math.Round(gunsAngle, 3) - (float)Math.Round(missileAngle, 3);
-        guns.rotation *= Quaternion.Euler(gunsOffset, 0, 0);
-
-        LaunchInterceptor();
+        LaunchLaser(target);
     }
 
-    public void LaunchInterceptor()
+    private void LaunchLaser(GameObject target)
+    {
+        Vector3 targetPosition = target.transform.position;
+
+        laserLine.SetPosition(0, laserOrigin.position);
+        Vector3 rayOrigin = laserOrigin.position;
+        RaycastHit hit;
+        if (Physics.Raycast(rayOrigin, targetPosition - guns.position, out hit, gunRange))
+        {
+            laserLine.SetPosition(1, hit.point);
+            OnTargetHit(target);
+        }
+        else
+        {
+            laserLine.SetPosition(1, rayOrigin + ((targetPosition - guns.position) * gunRange));
+        }
+        StartCoroutine(ShootLaser());
+    }
+
+    IEnumerator ShootLaser()
+    {
+        laserLine.enabled = true;
+        yield return new WaitForSeconds(laserDuration);
+        laserLine.enabled = false;
+    }
+
+    public void LaunchInterceptor(GameObject target)
     {
         GameObject staticInterceptorFired = interceptionMissiles[0];
         interceptionMissiles.Remove(staticInterceptorFired);
         GameObject missile = Instantiate(interceptorPrefab, staticInterceptorFired.transform.position, staticInterceptorFired.transform.rotation);
-        TestMissile missileControl = missile.GetComponent<TestMissile>();
-        missileControl.Launch();
+        InterceptMissile missileControl = missile.GetComponent<InterceptMissile>();
+        missileControl.Launch(target);
         Destroy(staticInterceptorFired);
+        Debug.Break();
     }
 }

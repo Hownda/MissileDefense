@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7604554658328358326}
   - component: {fileID: 4287143485813638101}
   - component: {fileID: 1322699062145678761}
+  - component: {fileID: 8034658629681597238}
   m_Layer: 0
   m_Name: Missile
   m_TagString: Missile
@@ -72,6 +73,20 @@ MonoBehaviour:
   accelerationTime: 5.5
   correctionDelay: 0.4
   fuelMass: 250
+--- !u!136 &8034658629681597238
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6594825795611934636}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.2
+  m_Height: 2.5
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 1.13}
 --- !u!1001 &1501756004858314571
 PrefabInstance:
   m_ObjectHideFlags: 0

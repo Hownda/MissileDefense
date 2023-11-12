@@ -83,7 +83,7 @@ public class Radar : MonoBehaviour
 
                 if (missileInformation.readyForInterception && !missileInformation.isIntercepted)
                 {
-                    interceptor.OnTargetDetected(missile.transform.position += 15 * direction);
+                    interceptor.AddTarget(missile);
                     missileInformation.isIntercepted = true;
                 }
             }
