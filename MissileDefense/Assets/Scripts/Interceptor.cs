@@ -7,8 +7,7 @@ using UnityEngine;
 
 public class Interceptor : MonoBehaviour
 {
-    public TestMissile testMissile;
-    public GameObject missilePrefab;
+    public GameObject interceptorPrefab;
 
     public List<GameObject> interceptionMissiles = new();
 
@@ -39,7 +38,7 @@ public class Interceptor : MonoBehaviour
     {
         GameObject staticInterceptorFired = interceptionMissiles[0];
         interceptionMissiles.Remove(staticInterceptorFired);
-        GameObject missile = Instantiate(missilePrefab, staticInterceptorFired.transform.position, staticInterceptorFired.transform.rotation);
+        GameObject missile = Instantiate(interceptorPrefab, staticInterceptorFired.transform.position, staticInterceptorFired.transform.rotation);
         TestMissile missileControl = missile.GetComponent<TestMissile>();
         missileControl.Launch();
         Destroy(staticInterceptorFired);

@@ -11,9 +11,10 @@ public class Radar : MonoBehaviour
 
     private Dictionary<int, MissileInformation> trackedMissiles = new();
 
-    private class MissileInformation
+    public class MissileInformation
     {
-        bool readyForInterception = false;
+        public bool readyForInterception = false;
+        public bool isIntercepted = false;
         Vector3 position;
         Vector3 forward;
         List<Vector3> lastForwards = new();
@@ -48,11 +49,6 @@ public class Radar : MonoBehaviour
 
             return forward;
         }
-
-        public bool ReadyForInterception()
-        {
-            return readyForInterception;
-        }
     }
 
     private void OnDrawGizmos()
@@ -81,27 +77,20 @@ public class Radar : MonoBehaviour
         if (trackedMissiles.ContainsKey(id))
         {
             MissileInformation missileInformation = trackedMissiles[id];
-            if (!missileInformation.ReadyForInterception())
+            if (!missileInformation.readyForInterception)
             {
                 Vector3 direction = missileInformation.UpdateInformation(missilePosition);
 
-                if (missileInformation.ReadyForInterception())
+                if (missileInformation.readyForInterception && !missileInformation.isIntercepted)
                 {
                     interceptor.OnTargetDetected(missile.transform.position += 15 * direction);
+                    missileInformation.isIntercepted = true;
                 }
             }
         }
         else
         {
             trackedMissiles.Add(id, new MissileInformation(missilePosition));
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            interceptor.testMissile.Launch();
         }
     }
 }
